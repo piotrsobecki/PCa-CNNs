@@ -160,10 +160,8 @@ def build_vgg_simple(input_shape) -> Network:
     def resblock(_input, filters, kernel_shape: list = [3, 3, 3], strides: list = [1, 1, 1], name="RB"):
         _input = tf_layer(_input)
         with tf.variable_scope(name):
-            L = conv(_input, dropratio=0.00, kernel_shape=kernel_shape, filters=filters, strides=strides, bnorm=True,
-                     name="C1", activation=tf.nn.leaky_relu)
-            L = conv(L, dropratio=0.00, kernel_shape=kernel_shape, filters=filters, bnorm=True, strides=strides,
-                     name="C2", activation=None)
+            L = conv(_input, dropratio=0.00, kernel_shape=kernel_shape, filters=filters, strides=strides, bnorm=True, name="C1", activation=tf.nn.leaky_relu)
+            L = conv(L, dropratio=0.00, kernel_shape=kernel_shape, filters=filters, bnorm=True, strides=strides, name="C2", activation=None)
             L = tf_layer(L) + _input
             L = tf.nn.leaky_relu(L)
         return L
@@ -180,10 +178,8 @@ def build_vgg_simple(input_shape) -> Network:
         # L = maxout(L, Lch, "MAXOUT")
         # location = get_pz_tz_weights(location)
         L = join_location([L], location, name="L_LOCATION")
-        L = connected(L, filters=modality_rules, dropratio=0.25, l_scale=l_scale, activation_fn=tf.nn.leaky_relu,
-                      name="D1")
-        L = connected(L, filters=modality_rules, dropratio=0.25, l_scale=l_scale, activation_fn=tf.nn.leaky_relu,
-                      name="D2")
+        L = connected(L, filters=modality_rules, dropratio=0.25, l_scale=l_scale, activation_fn=tf.nn.leaky_relu, name="D1")
+        L = connected(L, filters=modality_rules, dropratio=0.25, l_scale=l_scale, activation_fn=tf.nn.leaky_relu, name="D2")
         return L
 
     def global_max(_input, dropratio: float = 0.0, name="GLOBAL_MAX"):
@@ -332,7 +328,7 @@ def build_vgg_simple(input_shape) -> Network:
             l_regulated = 0
             l_scale = 0.1
             dropout_input = 0.00
-            dropout_base = 0.0
+            dropout_base = 1.0
             modality_rules = 32
             NET = create_net(x)
             print("NETWORK CREATED. L2_REGULATED_LAYERS = %d, DROPOUT_REGULATED_LAYERS = %d" % (

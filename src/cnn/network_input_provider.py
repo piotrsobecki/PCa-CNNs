@@ -56,6 +56,7 @@ class NetworkInputProvider:
             print("SERIALIZING: %s" % name)
             self.__serialize_data(ni)
             print("SERIALIZED")
+        ni.describe()
         return ni
 
 

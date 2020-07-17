@@ -13,14 +13,16 @@ class Variables:
     depth_crop = 1
 
 class Constants:
-    test_name = "cnn-m5"
-    architecture = NetStructure.CNN_VGG_SIMPLE
+    test_name = "CNN_VGG_PIRADS"
+    test_data_name = "cnn-m5"
+    architecture = NetStructure.CNN_VGG_PIRADS
     cv_folds = 5
     do_serialization = True
     do_train = True
     save_step = False
     min_epochs = 1000
-    max_epochs = 50000
+    max_epochs = 10200
+    checkpoint_epochs = [2500, 5000, 10000]#, 25000]
     data_augment_approx = 15 * 324
     batch_size = 32
     model_to_load = str
@@ -29,6 +31,7 @@ class Constants:
     device_type = "/gpu:0"  # Tensorflow gpu/cpu usage
     models_dir = "nets/"  # Trained nets directory
     net_inputs_dir = "nets/inputs/"  # Serialized nets input directory
+    log_dir = "log/"  # Serialized nets input directory
     dataset_dir = str  # Training dataset directory
     dataset_test_dir = str # Test dataset directory
 #1 3
@@ -38,4 +41,5 @@ class Constants:
         Constants.dataset_test_dir = "D:\workspace\github\phd\data\ProstateX/test"
         Constants.models_dir = Constants.rel + Constants.models_dir
         Constants.net_inputs_dir = Constants.rel + Constants.net_inputs_dir
+        Constants.log_dir = Constants.rel + Constants.log_dir
 

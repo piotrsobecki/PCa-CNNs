@@ -171,19 +171,19 @@ def build_vgg_modalities(input_shape) -> Network:
         return common_net(L, base_filters)
 
     def t2_modality_net(L, base_filters: int) -> dict:
-        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], filters=base_filters, bnorm=False, name="C001")
-        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], filters=base_filters, bnorm=False, name="C002")
+        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], filters=base_filters, bnorm=True, name="C001")
+        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], filters=base_filters, bnorm=True, name="C002")
         L = pool(L, dropratio=0.125, strides=[2, 2, 1], name="P0")
         L = common_net(L, 2* get_channels(L))
         return L
 
     def common_net(L, filters: int) -> dict:
-        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], bnorm=False, filters=filters, name="C01")
-        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], bnorm=False, filters=filters, name="C02")
+        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], bnorm=True, filters=filters, name="C01")
+        L = conv(L, dropratio=0.00, kernel_shape=[3, 3, 1], bnorm=True, filters=filters, name="C02")
         L = pool(L, dropratio=0.125, strides=[2, 2, 1], name="P1")
-        L = conv(L, dropratio=0.00, filters=2 * get_channels(L),    bnorm=False,  name="C1")
-        L = conv(L, dropratio=0.00, filters=get_channels(L),        bnorm=False,  name="C2")
-        L = conv(L, dropratio=0.00, filters=get_channels(L),        bnorm=False,  name="C3")
+        L = conv(L, dropratio=0.00, filters=2 * get_channels(L),    bnorm=True,  name="C1")
+        L = conv(L, dropratio=0.00, filters=get_channels(L),        bnorm=True,  name="C2")
+        L = conv(L, dropratio=0.00, filters=get_channels(L),        bnorm=True,  name="C3")
         L = pool(L, dropratio=0.125, name="P2")
         L = global_avg(L,dropratio=0.00, name="P3")
         return L
@@ -294,7 +294,7 @@ def build_vgg_modalities(input_shape) -> Network:
             l_regulated = 0
             l_scale = 0.1
             dropout_input = 0.00
-            dropout_base = 0.0
+            dropout_base = 1.0
             modality_rules = 2
             da_d0_factor = t2_d0_factor = dce_d0_factor = 1
             NET = create_net(x)

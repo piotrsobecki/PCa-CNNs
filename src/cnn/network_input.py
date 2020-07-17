@@ -39,6 +39,8 @@ class NetworkInput:
         xs = {name: val[idx] for name, val in self.xs.items()}
         return NetworkInput(self.name, self.ids[idx], xs, self.ys[idx])
 
+    def describe(self):
+        print("NetworkInput: ", self.name, "ys:", self.ys.shape)
 
     def copy_dict(self, dict):
         return {name: val.copy() for name, val in dict.items()}

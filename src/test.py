@@ -18,8 +18,8 @@ def main(argv):
 
     cv_seed = 1
 
-    net_input_provider = NetworkInputProvider(Constants.dataset_dir, Constants.test_name)
-    net_input_provider_test = NetworkInputProvider(Constants.dataset_test_dir, Constants.test_name)
+    net_input_provider = NetworkInputProvider(Constants.dataset_dir, Constants.test_data_name)
+    net_input_provider_test = NetworkInputProvider(Constants.dataset_test_dir, Constants.test_data_name)
 
     net_input = net_input_provider.get_network_input("train", do_preprocessing=False)
     augmented_input = net_input_provider.get_network_input("augmented", do_preprocessing=False)
@@ -43,7 +43,7 @@ def main(argv):
     network = net_factory.build_network([*_gen_batches(net_input, 1, False)][0].input_shape)
 
     folds = Constants.cv_folds
-    tests = 50
+    tests = 2
     kf = StratifiedKFold(n_splits=folds, shuffle=True, random_state=cv_seed)
     fold = 0
     aucs = np.zeros(folds)
@@ -53,8 +53,11 @@ def main(argv):
         # Stratified CV
         for train_index, val_index in kf.split(net_input.ids, lesions_types):
             print('CV [%02d]' % (fold))
-            train = augmented_input.from_ids(norm_to_aug(net_input, train_index, augmented_input))
+
             train_test = net_input.from_ids(train_index)
+            #train = train_test
+            train = augmented_input.from_ids(norm_to_aug(net_input, train_index, augmented_input))
+
             val = net_input.from_ids(val_index)
 
             network.clear_graph()
@@ -66,6 +69,9 @@ def main(argv):
 
             print('BEST EPOCH VAL AUC: %.5f' % best_auc)
             print(history.row(history.best_epoch))
+
+
+
             history.dump('HISTORY-%s/epochs-%d-%d.log' % (Constants.test_name, test_no, fold))
             dump_probs(Constants.test_name, history, net_input_split, net_input_test, test_no, fold)
 
